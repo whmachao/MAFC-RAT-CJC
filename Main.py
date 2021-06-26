@@ -2,7 +2,7 @@ from utilities.Utils import create_classifier, create_representation_generator
 from utilities.Utils import create_directory
 import sklearn
 import pandas as pd
-import Visualizer
+from Visualizer import Visualizer
 import utilities.Constants as Constants
 import tkinter as tk
 import os
@@ -44,10 +44,10 @@ def fit_classifier(dataset_dict, classifier_name, output_directory):
 
 
 # this function is used to launch an experiment on a single representation of specific dataset
-def conduct_experiment(archive_name, dataset_name, classifier_name, preprocessor_name, itr, datasets_dict,
+def conduct_experiment(archive_name, dataset_name, classifier_name, itr, datasets_dict,
                        representation_method, representation_name):
     output_directory = os.getcwd() + '/detailed_results/' + classifier_name + '/' + archive_name + itr + '/' + \
-                       dataset_name + '/' + preprocessor_name + '/' + representation_method + '/' + representation_name + '/'
+                       dataset_name + '/' + representation_method + '/' + representation_name + '/'
 
     output_directory = create_directory(output_directory)
 
@@ -69,19 +69,18 @@ def conduct_experiment(archive_name, dataset_name, classifier_name, preprocessor
 
 
 def grid_search_main_loop():
-    for category_name in target_dataset_names:
-        for representation_generator in target_representation_generators:
-            my_generator = create_representation_generator(representation_generator, {}, category_name)
+    for category_name in target_datasets:
+        for representor_name in target_representors:
+            my_generator = create_representation_generator(representor_name, {}, category_name)
             my_representations_dict = my_generator.get_all_representations_dict()
             # STEP 4: train/validate the classifiers on all types of representations ***************************
             for my_representation_key in my_representations_dict.keys():
                 my_datasets_dict = my_representations_dict[my_representation_key]
-                for classifier_name in target_classifier_names:
+                for classifier_name in target_classifiers:
                     for current_itr in range(Constants.ITERATIONS):
                         itr = '_itr_' + str(current_itr + 1)
-                        conduct_experiment(Constants.ARCHIVE_NAMES[2], category_name, classifier_name,
-                                           Constants.MY_PREPROCESSORS[0], itr, my_datasets_dict,
-                                           representation_generator, my_representation_key)
+                        conduct_experiment(Constants.ARCHIVE_NAMES[0], category_name, classifier_name,
+                                           itr, my_datasets_dict, representor_name, my_representation_key)
 
 
 def aggregate_local_detailed_results(results_dir, column_names_dict):
@@ -114,7 +113,7 @@ def aggregate_local_detailed_results(results_dir, column_names_dict):
         df_metrics['classifier'] = column_names_dict['classifier']
         df_metrics['iteration'] = column_names_dict['iteration']
         df_metrics['representation_key'] = dir
-        df_metrics['batch_size'] = Local_Constants.BATCH_SIZE
+        df_metrics['batch_size'] = Constants.BATCH_SIZE
         if column_names_dict['representation_generator'] == 'BDT':
             df_metrics['bin_num'] = dir.split('_')[0]
             df_metrics['split_ratio'] = dir.split('_')[1]
@@ -132,23 +131,21 @@ def aggregate_local_detailed_results(results_dir, column_names_dict):
     return res
 
 
-def aggregate_all_detailed_results(source_url, classifier_names, dataset_names, preprocessors, representation_generators):
+def aggregate_all_detailed_results(source_url, classifier_names, dataset_names, representation_generators):
     my_all_results = pd.DataFrame()
     for classifier_name in classifier_names:
-        for iteration in range(Local_Constants.ITERATIONS):
+        for iteration in range(Constants.ITERATIONS):
             for dataset_name in dataset_names:
-                for preprocessor_name in preprocessors:
-                    for representation_generator in representation_generators:
-                        column_names_dict = {'archive': Constants.ARCHIVE_NAMES[2],
-                                             'dataset': dataset_name,
-                                             'preprocessor': preprocessor_name,
-                                             'representation_generator': representation_generator,
-                                             'classifier': classifier_name, 'iteration': str(iteration + 1)}
-                        local_results_url = source_url + '/' + classifier_name + '/' + Constants.ARCHIVE_NAMES[2] + \
-                                            '_itr_' + str(iteration + 1) + '/' + dataset_name + '/' + \
-                                            preprocessor_name + '/' + representation_generator + '/'
-                        res = aggregate_local_detailed_results(local_results_url, column_names_dict)
-                        my_all_results = my_all_results.append(res)
+                for representation_generator in representation_generators:
+                    column_names_dict = {'archive': Constants.ARCHIVE_NAMES[2],
+                                         'dataset': dataset_name,
+                                         'representation_generator': representation_generator,
+                                         'classifier': classifier_name, 'iteration': str(iteration + 1)}
+                    local_results_url = source_url + '/' + classifier_name + '/' + Constants.ARCHIVE_NAMES[2] + \
+                                        '_itr_' + str(iteration + 1) + '/' + dataset_name + '/' \
+                                        + representation_generator + '/'
+                    res = aggregate_local_detailed_results(local_results_url, column_names_dict)
+                    my_all_results = my_all_results.append(res)
     return my_all_results
 
 
@@ -163,17 +160,15 @@ if __name__ == '__main__':
 
     # command_string = 'etl_into_ucr_format'
 
-    target_preprocessors = Constants.MY_PREPROCESSORS[0:1]
-    target_representation_generators = Constants.MY_REPRESENTATION_GENERATORS[3:4]
-    target_classifier_names = Constants.MY_CLASSIFIERS[0:4]
-    target_dataset_names = Constants.APP_CATEGORY_NAMES[0:1]
+    target_representors = Constants.MY_REPRESENTORS[2:3]
+    target_classifiers = Constants.MY_CLASSIFIERS[0:1]
+    target_datasets = Constants.APP_CATEGORY_NAMES[-1:]
 
     if command_string == 'run_tsc_experiments':
         grid_search_main_loop()
     elif command_string == 'aggregate_tsc_results':
         source_dir_url = os.getcwd() + '/detailed_results/'
-        all_results = aggregate_all_detailed_results(source_dir_url, target_classifier_names, target_dataset_names,
-                                                     target_preprocessors, target_representation_generators)
+        all_results = aggregate_all_detailed_results(source_dir_url, target_classifiers, target_datasets, target_representors)
 
         save_dir_url = os.getcwd() + '/aggregated_results/'
         create_directory(save_dir_url)

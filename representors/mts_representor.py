@@ -8,7 +8,7 @@ import os
 from operator import sub
 import matplotlib.pyplot as plt
 import utilities.Constants as Constants
-from utilities.Utils import construct_method_call_tree, create_etl_component, simple_histogram_transformation
+from utilities.Utils import construct_method_call_tree, create_etl_component, get_project_dir
 from utilities.Utils import simple_distribution_transform, split_train_test, ecdf_based_transform, draw_2D_figure
 from treelib import Node, Tree
 import ast
@@ -65,8 +65,8 @@ class MTS_Representor():
         start_time = time.time()
         app_trace_dict = {}
         mct_depth_list, mct_nodes_num_list = list(), list()
-        all_category_dir = Local_Constants.ROOT_DIR + 'archives' + '/' + Constants.ARCHIVE_NAMES[2]
-        category_dir = all_category_dir + '/' + self.dataset_name + '/'
+        all_category_dir = get_project_dir() + '/archives' + '/' + Constants.ARCHIVE_NAMES[0]
+        category_dir = all_category_dir + '/' + self.dataset_name
         for app_name in os.listdir(category_dir):
             trace_names_list = os.listdir(category_dir + '/' + app_name)
             for trace_name in trace_names_list:
@@ -74,7 +74,7 @@ class MTS_Representor():
                 my_trace_name = self.dataset_name + '&' + app_name + '&' + trace_name
                 call_method_tree, exceptional_lines = construct_method_call_tree(my_trace_name, my_trace_url)
                 app_trace_dict[my_trace_name] = call_method_tree
-                if Local_Constants.SHOW_DETAILS:
+                if Constants.SHOW_DETAILS:
                     call_method_tree.show()
                 print(my_trace_name + ' method call tree statistics:')
                 print('Depth: ' + str(call_method_tree.depth()))
@@ -85,7 +85,7 @@ class MTS_Representor():
                 print('---------------------------------------------------------------------------------')
         complete_time = time.time()
         print('Complete to parse: ' + self.dataset_name + ' using ' + str(complete_time - start_time) + ' seconds!')
-        if Local_Constants.DRAW_STATISTICAL_CHARACTERISTICS:
+        if Constants.DRAW_STATISTICAL_CHARACTERISTICS:
             my_title = self.dataset_name
             my_data_dict = dict()
             my_data_dict['x_label'], my_data_dict['y_label'] = 'MCT Depth', 'MCT Nodes'

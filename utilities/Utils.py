@@ -10,6 +10,7 @@ import pandas as pd
 from treelib import Tree
 import re
 import utilities.Constants as Constants
+from pathlib import Path
 
 
 def create_directory(directory_path):
@@ -781,18 +782,18 @@ def create_classifier(classifier_name, input_shape, nb_classes, output_directory
 
 
 def create_representation_generator(representation_method_name, datasets_dict, dataset_name):
-    if representation_method_name == Constants.MY_REPRESENTATION_GENERATORS[1]:
+    if representation_method_name == Constants.MY_REPRESENTORS[1]:
         from representors import level_histo_representor
         level_histo_param_dict = {'tree_level_list': Constants.TREE_LEVEL_LIST,
                                   'fixed_length_list': Constants.FIXED_LENGTH_LIST,
                                   'gram_num_list': Constants.GRAM_NUMBER_LIST,
                                   'etl_component': Constants.MY_ETL_COMPONENTS[1]}
         return level_histo_representor.Level_Histo_Representor(datasets_dict, dataset_name, level_histo_param_dict)
-    if representation_method_name == Constants.MY_REPRESENTATION_GENERATORS[2]:
+    if representation_method_name == Constants.MY_REPRESENTORS[2]:
         from representors import mts_representor
         mts_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[2]}
         return mts_representor.MTS_Representor(datasets_dict, dataset_name, mts_param_dict)
-    if representation_method_name == Constants.MY_REPRESENTATION_GENERATORS[3]:
+    if representation_method_name == Constants.MY_REPRESENTORS[3]:
         from representors import semantic_mts_representor
         top_k_keywords_sizes = list(range(10, 51, 10))
         fixed_matrix_sizes = [Constants.FIXED_INPUT_MATRIX_SIZE for i in range(len(top_k_keywords_sizes))]
@@ -1001,7 +1002,15 @@ def get_optimal_batch_size(train_set_size, default_batch_size, percentage):
     return min(2**int(np.log2(candidate_batch_size)), default_batch_size)
 
 
+# To help all the other python code easily obtain the project root directory.
+def get_project_dir():
+    project_root = Path(__file__).parent.parent
+    return str(project_root)
+
+
 if __name__ == '__main__':
+    get_project_dir()
+
     print(get_sampled_arr_by_sliding_window([1,2,3,4,5,6,7], 3, 2))
     create_representation_generator(Constants.MY_REPRESENTATION_GENERATORS[3], None, None)
 

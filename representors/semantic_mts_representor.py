@@ -8,7 +8,7 @@ import os
 from operator import sub
 import matplotlib.pyplot as plt
 import utilities.Constants as Constants
-from utilities.Utils import construct_method_call_tree, create_etl_component, simple_histogram_transformation
+from utilities.Utils import construct_method_call_tree, create_etl_component, get_project_dir
 from utilities.Utils import simple_distribution_transform, split_train_test, ecdf_based_transform, draw_2D_figure
 from treelib import Node, Tree
 import ast
@@ -53,8 +53,8 @@ class Semantic_MTS_Representor():
         start_time = time.time()
         app_trace_dict = {}
         mct_depth_list, mct_nodes_num_list = list(), list()
-        all_category_dir = Constants.ROOT_DIR + 'archives' + '/' + Constants.ARCHIVE_NAMES[2]
-        category_dir = all_category_dir + '/' + self.dataset_name + '/'
+        all_category_dir = get_project_dir() + '/archives' + '/' + Constants.ARCHIVE_NAMES[2]
+        category_dir = all_category_dir + '/' + self.dataset_name
         for app_name in os.listdir(category_dir):
             trace_names_list = os.listdir(category_dir + '/' + app_name)
             for trace_name in trace_names_list:

@@ -191,12 +191,12 @@ class Plain_Histo_Extractor:
         return sample_vector_list
 
 if __name__ == '__main__':
-    import AFD.AFD_Constants as Local_Constants
-    from AFD.plain_histo_representation_generator import Plain_Histo_Representation_Generator
+    import utilities.Constants as Constants
+    from representors.plain_histo_representor import Plain_Histo_Representor
 
     plain_histo_param_dict = {'tree_level_list': None,
-                              'bin_num_list': Local_Constants.BIN_NUMBER_LIST,
-                              'etl_component': Local_Constants.MY_ETL_COMPONENTS[0]}
-    my_generator = Plain_Histo_Representation_Generator({}, 'Test', plain_histo_param_dict)
+                              'bin_num_list': Constants.BIN_NUMBER_LIST,
+                              'etl_component': Constants.MY_ETL_COMPONENTS[0]}
+    my_generator = Plain_Histo_Representor({}, 'Test', plain_histo_param_dict)
     all_representation_dict = my_generator.get_all_representations_dict()
     print()

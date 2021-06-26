@@ -76,13 +76,13 @@ class Level_Histo_Extractor:
         return sample_vector_list
 
 if __name__ == '__main__':
-    import AFD.AFD_Constants as Local_Constants
-    from AFD.level_histo_representation_generator import Level_Histo_Representation_Generator
+    import utilities.Constants as Constants
+    from representors.level_histo_representor import Level_Histo_Representor
 
-    level_histo_param_dict = {'tree_level_list': Local_Constants.TREE_LEVEL_LIST,
-                              'fixed_length_list': Local_Constants.FIXED_LENGTH_LIST,
-                              'gram_num_list': Local_Constants.GRAM_NUMBER_LIST,
-                              'etl_component': Local_Constants.MY_ETL_COMPONENTS[1]}
-    my_generator = Level_Histo_Representation_Generator({}, 'Test', level_histo_param_dict)
+    level_histo_param_dict = {'tree_level_list': Constants.TREE_LEVEL_LIST,
+                              'fixed_length_list': Constants.FIXED_LENGTH_LIST,
+                              'gram_num_list': Constants.GRAM_NUMBER_LIST,
+                              'etl_component': Constants.MY_ETL_COMPONENTS[1]}
+    my_generator = Level_Histo_Representor({}, 'Test', level_histo_param_dict)
     all_representation_dict = my_generator.get_all_representations_dict()
     print()

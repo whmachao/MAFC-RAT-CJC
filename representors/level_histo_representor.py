@@ -8,7 +8,7 @@ import os
 from operator import sub
 import matplotlib.pyplot as plt
 import utilities.Constants as Constants
-from utilities.Utils import construct_method_call_tree, create_etl_component, simple_histogram_transformation
+from utilities.Utils import construct_method_call_tree, create_etl_component, get_project_dir
 from utilities.Utils import simple_distribution_transform, pad_method_call_tree, split_train_test
 import Checker
 from treelib import Node, Tree
@@ -109,8 +109,8 @@ class Level_Histo_Representor():
         print('Start to parse: ' + self.dataset_name)
         start_time = time.time()
         functionality_names_dict, app_trace_dict = {}, {}
-        all_category_dir = Constants.ROOT_DIR + 'archives' + '/' + Constants.ARCHIVE_NAMES[2]
-        category_dir = all_category_dir + '/' + self.dataset_name + '/'
+        all_category_dir = get_project_dir() + '/archives' + '/' + Constants.ARCHIVE_NAMES[2]
+        category_dir = all_category_dir + '/' + self.dataset_name
         functionality_names_dict[self.dataset_name] = os.listdir(category_dir)
         for app_name in functionality_names_dict[self.dataset_name]:
             trace_names_list = os.listdir(category_dir + '/' + app_name)

@@ -47,7 +47,7 @@ class Method_Call_Tree_MTS_Extractor:
             my_df = node.data[0].reset_index(drop=True)
             duration = my_df.loc[len(my_df)-1]['threadClock'] - my_df.loc[0]['threadClock']
             method_duration_time_series.append(duration)
-        if Local_Constants.NORMALIZE_TIME_SERIES:
+        if Constants.NORMALIZE_TIME_SERIES:
             method_duration_time_series = get_normalized_list(method_duration_time_series)
         return method_duration_time_series
 
@@ -57,7 +57,7 @@ class Method_Call_Tree_MTS_Extractor:
         for node in self.method_call_sequence:
             access_times = self._get_variable_access_times_by_method(node, event=event)
             variable_access_times_time_series.append(access_times)
-        if Local_Constants.NORMALIZE_TIME_SERIES:
+        if Constants.NORMALIZE_TIME_SERIES:
             variable_access_times_time_series = get_normalized_list(variable_access_times_time_series)
         return variable_access_times_time_series
 
@@ -110,8 +110,8 @@ class Method_Call_Tree_MTS_Extractor:
                     break
         # if you do not want to filter the method call sequence, you simply return 'method_call_sequence'
         # return method_call_sequence
-        return self._filter_method_call_sequence(method_call_sequence, Local_Constants.DURATION_PERCENTAGE,
-                                                 Local_Constants.VARIABLE_ACCESS_TIMES, Local_Constants.TOP_K_DURATION)
+        return self._filter_method_call_sequence(method_call_sequence, Constants.DURATION_PERCENTAGE,
+                                                 Constants.VARIABLE_ACCESS_TIMES, Constants.TOP_K_DURATION)
 
     # Filter out the important method calls according to the rules as follows:
     # Rule 1: method calls of which the duration is below 0.1% (0.001) of the whole duration;
@@ -173,10 +173,10 @@ class Method_Call_Tree_MTS_Extractor:
 
 
 if __name__ == '__main__':
-    import AFD.AFD_Constants as Local_Constants
-    from AFD.mts_representation_generator import Multivariate_Time_Series_Representation_Generator
+    import utilities.Constants as Constants
+    from representors.mts_representor import MTS_Representor
 
-    mts_param_dict = {'etl_component': Local_Constants.MY_ETL_COMPONENTS[2]}
-    my_generator = Multivariate_Time_Series_Representation_Generator({}, 'Test-2', mts_param_dict)
+    mts_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[2]}
+    my_generator = MTS_Representor({}, 'Test-2', mts_param_dict)
     all_representation_dict = my_generator.get_all_representations_dict()
     print()

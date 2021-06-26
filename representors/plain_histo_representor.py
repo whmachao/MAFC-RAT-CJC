@@ -8,7 +8,7 @@ import os
 from operator import sub
 import matplotlib.pyplot as plt
 import utilities.Constants as Constants
-from utilities.Utils import new_process_single_trace, simple_histogram_transformation, create_etl_component
+from utilities.Utils import get_project_dir, simple_histogram_transformation, create_etl_component
 from utilities.Utils import get_train_test_indices, construct_method_call_tree, get_nodes_at_specific_level
 from treelib import Node, Tree
 import ast
@@ -29,8 +29,8 @@ class Plain_Histo_Representor():
 
         # Step 1: extract the method call tree from the original trace file
         functionality_names_dict, app_trace_dict = {}, {}
-        all_category_dir = Constants.ROOT_DIR + 'archives' + '/' + Constants.ARCHIVE_NAMES[2]
-        category_dir = all_category_dir + '/' + self.dataset_name + '/'
+        all_category_dir = get_project_dir() + '/archives' + '/' + Constants.ARCHIVE_NAMES[2]
+        category_dir = all_category_dir + '/' + self.dataset_name
         functionality_names_dict[self.dataset_name] = os.listdir(category_dir)
         for app_name in functionality_names_dict[self.dataset_name]:
             trace_names_list = os.listdir(category_dir + '/' + app_name)
