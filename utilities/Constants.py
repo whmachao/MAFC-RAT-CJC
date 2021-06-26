@@ -55,7 +55,7 @@ TOP_K_KEYWORDS_LIST = range(10, 21, 10)
 
 
 # Configuration for Classifiers ****************************************************************************************
-MY_CLASSIFIERS = ['MLP', 'LSTM', 'FCN', 'ResNet','FCN_CAM', 'ResNet_CAM']
+MY_CLASSIFIERS = ['MLP', 'LSTM', 'FCN', 'ResNet']
 
 KNN_K = 1
 KNN_STRATEGY = 'classmost'
@@ -65,7 +65,7 @@ ITERATIONS = 2
 
 
 # For APP_TRACE_2019  archive, BATCH_SIZE is set to 16
-BATCH_SIZE = 1
+BATCH_SIZE = 16
 
 VERBOSE = 2
 

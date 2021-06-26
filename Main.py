@@ -160,8 +160,8 @@ if __name__ == '__main__':
 
     # command_string = 'etl_into_ucr_format'
 
-    target_representors = Constants.MY_REPRESENTORS[3:4]
-    target_classifiers = Constants.MY_CLASSIFIERS[0:1]
+    target_representors = Constants.MY_REPRESENTORS[2:4]
+    target_classifiers = Constants.MY_CLASSIFIERS[0:]
     target_datasets = Constants.APP_CATEGORY_NAMES[-1:]
 
     if command_string == 'run_tsc_experiments':
