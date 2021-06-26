@@ -39,8 +39,7 @@ class Classifier_FCN:
         model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(),
                       metrics=['accuracy'])
 
-        reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.5, patience=50,
-                                                      min_lr=0.0001)
+        reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.5, patience=50, min_lr=0.0001)
 
         file_path = self.output_directory + 'best_model.hdf5'
 
@@ -60,19 +59,27 @@ class Classifier_FCN:
         mini_batch_size = get_optimal_batch_size(x_train.shape[0], batch_size, 0.1)
         print('mini_batch_size is ' + str(mini_batch_size))
 
-        start_time = time.time()
+        start_training_time = time.time()
 
         hist = self.model.fit(x_train, y_train, batch_size=mini_batch_size, epochs=nb_epochs,
                               verbose=self.verbose, validation_data=(x_val, y_val), callbacks=self.callbacks)
 
-        duration = time.time() - start_time
+        end_training_time = time.time()
+        training_time = end_training_time - start_training_time
 
         y_pred = self.model.predict(x_val)
+
+        end_testing_time = time.time()
+        testing_time = end_testing_time - end_training_time
 
         # convert the predicted from binary to integer
         y_pred = np.argmax(y_pred, axis=1)
 
-        save_logs(self.output_directory, hist, y_pred, y_true, duration)
+        save_logs(self.output_directory, hist, y_pred, y_true, training_time)
 
         if only_save_csv:
             delete_logs(self.output_directory)
+
+        keras.backend.clear_session()
+
+        return training_time, testing_time

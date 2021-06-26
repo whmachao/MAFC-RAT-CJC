@@ -53,7 +53,7 @@ class Semantic_MTS_Representor():
         start_time = time.time()
         app_trace_dict = {}
         mct_depth_list, mct_nodes_num_list = list(), list()
-        all_category_dir = get_project_dir() + '/archives' + '/' + Constants.ARCHIVE_NAMES[2]
+        all_category_dir = get_project_dir() + '/archives' + '/' + Constants.ARCHIVE_NAMES[0]
         category_dir = all_category_dir + '/' + self.dataset_name
         for app_name in os.listdir(category_dir):
             trace_names_list = os.listdir(category_dir + '/' + app_name)

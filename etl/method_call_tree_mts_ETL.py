@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from heapq import nlargest
 from treelib import Node, Tree
-
+import utilities.Constants as Constants
 from utilities.Utils import print_full_dataframe, get_normalized_list, draw_2D_figure, extract_words, load_words_dict
 
 
@@ -173,7 +173,6 @@ class Method_Call_Tree_MTS_Extractor:
 
 
 if __name__ == '__main__':
-    import utilities.Constants as Constants
     from representors.mts_representor import MTS_Representor
 
     mts_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[2]}

@@ -4,7 +4,7 @@ import pandas as pd
 from heapq import nlargest
 from treelib import Node, Tree
 
-from utilities.Utils import print_full_dataframe, get_normalized_list, draw_2D_figure, extract_words, load_words_dict
+from utilities.Utils import get_project_dir, get_normalized_list, draw_2D_figure, extract_words, load_words_dict
 from utilities.tfidf import TfIdf
 import utilities.Constants as Constants
 
@@ -21,7 +21,7 @@ class Method_Call_Tree_Semantic_MTS_Extractor:
     def get_time_series_of_all_attributes(self):
         sample_vector_list = list()
 
-        my_words = load_words_dict('words.txt')
+        my_words = load_words_dict(get_project_dir() + '/resources/words.txt')
         method_full_name_ts = self._get_method_full_name_ts()
         method_full_name_ts = self._transfer_method_name_sequence_into_words_sequence(method_full_name_ts, my_words)
         variable_read_full_name_ts = self._get_variable_full_name_ts(event=3)

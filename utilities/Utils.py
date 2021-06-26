@@ -948,7 +948,7 @@ def save_logs(output_directory, hist, y_pred, y_true, duration, lr=True, y_true_
     df_metrics = calculate_metrics(y_true, y_pred, duration, y_true_val, y_pred_val)
     df_metrics.to_csv(output_directory + 'df_metrics.csv', index=False)
 
-    index_best_model = hist_df['val_accuracy'].idxmax()
+    index_best_model = hist_df['val_acc'].idxmax()
     row_best_model = hist_df.loc[index_best_model]
 
     df_best_model = pd.DataFrame(data=np.zeros((1, 7), dtype=np.float), index=[0],
@@ -958,8 +958,8 @@ def save_logs(output_directory, hist, y_pred, y_true, duration, lr=True, y_true_
 
     df_best_model['best_model_train_loss'] = row_best_model['loss']
     df_best_model['best_model_val_loss'] = row_best_model['val_loss']
-    df_best_model['best_model_train_acc'] = row_best_model['accuracy']
-    df_best_model['best_model_val_acc'] = row_best_model['val_accuracy']
+    df_best_model['best_model_train_acc'] = row_best_model['acc']
+    df_best_model['best_model_val_acc'] = row_best_model['val_acc']
     df_best_model['time_consumption_in_seconds'] = duration
     if lr == True:
         df_best_model['best_model_learning_rate'] = row_best_model['lr']
