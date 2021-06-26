@@ -3,6 +3,7 @@ import os
 import time
 from scipy.stats import tmean, tvar, tmin, tmax, tstd, tsem
 from scipy.stats import gmean, hmean, kurtosis, skew, variation
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -779,33 +780,20 @@ def create_classifier(classifier_name, input_shape, nb_classes, output_directory
     raise ValueError(classifier_name + ' is not the supported CLASSIFIER!')
 
 
-def create_preprocessor(preprocessor_name, archive_name, dataset_name):
-    if preprocessor_name == 'DPre':
-        from preprocessors import preprocessor_dummy
-        return preprocessor_dummy.Preprocessor_DUMMY(archive_name, dataset_name)
-    if preprocessor_name == 'GANPre':
-        from preprocessors import preprocessor_gan
-        return preprocessor_gan.Preprocessor_GAN(archive_name, dataset_name)
-    if preprocessor_name == 'DCGANPre':
-        from preprocessors import preprocessor_dcgan
-        return preprocessor_dcgan.Preprocessor_DCGAN(archive_name, dataset_name)
-    raise ValueError(preprocessor_name + ' is not a supported PREPROCESSOR!')
-
-
 def create_representation_generator(representation_method_name, datasets_dict, dataset_name):
     if representation_method_name == Constants.MY_REPRESENTATION_GENERATORS[1]:
-        from AFD import level_histo_representation_generator
+        from representors import level_histo_representor
         level_histo_param_dict = {'tree_level_list': Constants.TREE_LEVEL_LIST,
                                   'fixed_length_list': Constants.FIXED_LENGTH_LIST,
                                   'gram_num_list': Constants.GRAM_NUMBER_LIST,
                                   'etl_component': Constants.MY_ETL_COMPONENTS[1]}
-        return level_histo_representation_generator.Level_Histo_Representation_Generator(datasets_dict, dataset_name, level_histo_param_dict)
+        return level_histo_representor.Level_Histo_Representor(datasets_dict, dataset_name, level_histo_param_dict)
     if representation_method_name == Constants.MY_REPRESENTATION_GENERATORS[2]:
-        from AFD import mts_representation_generator
+        from representors import mts_representor
         mts_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[2]}
-        return mts_representation_generator.MTS_Representation_Generator(datasets_dict, dataset_name, mts_param_dict)
+        return mts_representor.MTS_Representor(datasets_dict, dataset_name, mts_param_dict)
     if representation_method_name == Constants.MY_REPRESENTATION_GENERATORS[3]:
-        from AFD import semantic_mts_representation_generator
+        from representors import semantic_mts_representor
         top_k_keywords_sizes = list(range(10, 51, 10))
         fixed_matrix_sizes = [Constants.FIXED_INPUT_MATRIX_SIZE for i in range(len(top_k_keywords_sizes))]
         vector_dimensionality_sizes = [int(fixed_matrix_sizes[i]/top_k_keywords_sizes[i]) for i in range(len(top_k_keywords_sizes))]
@@ -813,20 +801,20 @@ def create_representation_generator(representation_method_name, datasets_dict, d
         mts_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[3],
                           'top_k_keywords_sizes': top_k_keywords_sizes,
                           'vector_dimensionality_sizes': vector_dimensionality_sizes}
-        return semantic_mts_representation_generator.Semantic_MTS_Representation_Generator(datasets_dict, dataset_name, mts_param_dict)
+        return semantic_mts_representor.Semantic_MTS_Representor(datasets_dict, dataset_name, mts_param_dict)
     raise ValueError(representation_method_name + ' is not a supported REPRESENTATION_GENERATOR!')
 
 
 def create_etl_component(etl_component_name, method_call_tree, param_one, param_two):
     if etl_component_name == Constants.MY_ETL_COMPONENTS[1]:
-        from AFD import level_histo_ETL
+        from etl import level_histo_ETL
         tree_level, n_gram = param_one, param_two
         return level_histo_ETL.Level_Histo_Extractor(method_call_tree, tree_level, n_gram)
     if etl_component_name == Constants.MY_ETL_COMPONENTS[2]:
-        from AFD import method_call_tree_mts_ETL
+        from etl import method_call_tree_mts_ETL
         return method_call_tree_mts_ETL.Method_Call_Tree_MTS_Extractor(method_call_tree, None, None)
     if etl_component_name == Constants.MY_ETL_COMPONENTS[3]:
-        from AFD import method_call_tree_sementics_mts_ETL
+        from etl import method_call_tree_sementics_mts_ETL
         top_k_keywords = param_one
         return method_call_tree_sementics_mts_ETL.Method_Call_Tree_Semantic_MTS_Extractor(method_call_tree, top_k_keywords, None)
     raise ValueError(etl_component_name + ' is not a supported ETL_COMPONENT!')
@@ -923,6 +911,33 @@ def extract_words(words_set, ori_string, max_window_size=8, min_length=3, delimi
 # split the camel case string into words
 def camel_case_split(str):
     return re.findall(r'[A-Z](?:[a-z]+|[A-Z]*(?=[A-Z]|$))', str)
+
+
+def calculate_metrics(y_true, y_pred, duration, y_true_val=None, y_pred_val=None):
+    res = pd.DataFrame(data=np.zeros((1, 4), dtype=np.float), index=[0],
+                       columns=['precision', 'accuracy', 'recall', 'duration'])
+    res['precision'] = precision_score(y_true, y_pred, average='macro')
+    res['accuracy'] = accuracy_score(y_true, y_pred)
+
+    if not y_true_val is None:
+        # this is useful when transfer learning is used with cross validation
+        res['accuracy_val'] = accuracy_score(y_true_val, y_pred_val)
+
+    res['recall'] = recall_score(y_true, y_pred, average='macro')
+    res['duration'] = duration
+    return res
+
+
+def plot_epochs_metric(hist, file_name, metric='loss'):
+    plt.figure()
+    plt.plot(hist.history[metric])
+    plt.plot(hist.history['val_' + metric])
+    plt.title('model ' + metric)
+    plt.ylabel(metric, fontsize='large')
+    plt.xlabel('epoch', fontsize='large')
+    plt.legend(['train', 'val'], loc='upper left')
+    plt.savefig(file_name, bbox_inches='tight')
+    plt.close()
 
 
 def save_logs(output_directory, hist, y_pred, y_true, duration, lr=True, y_true_val=None, y_pred_val=None):
