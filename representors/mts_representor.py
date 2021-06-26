@@ -27,9 +27,9 @@ class MTS_Representor():
         total_representations = 1
         progress = 0
         if Constants.ENABLE_ECDF:
-            for i in range(len(Constants.DATA_POINTS_LIST)):
+            for i in range(len(self.param_dict['data_points_list'])):
                 progress += 1
-                data_points = Constants.DATA_POINTS_LIST[i]
+                data_points = self.param_dict['data_points_list'][i]
                 representation_key = str(data_points)
                 start_time = time.time()
                 print('##################################################################################')

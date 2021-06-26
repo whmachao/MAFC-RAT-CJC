@@ -791,18 +791,19 @@ def create_representation_generator(representation_method_name, datasets_dict, d
         return level_histo_representor.Level_Histo_Representor(datasets_dict, dataset_name, level_histo_param_dict)
     if representation_method_name == Constants.MY_REPRESENTORS[2]:
         from representors import mts_representor
-        mts_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[2]}
+        mts_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[2],
+                          'data_points_list': Constants.DATA_POINTS_LIST}
         return mts_representor.MTS_Representor(datasets_dict, dataset_name, mts_param_dict)
     if representation_method_name == Constants.MY_REPRESENTORS[3]:
         from representors import semantic_mts_representor
-        top_k_keywords_sizes = list(range(10, 51, 10))
+        top_k_keywords_sizes = list(Constants.TOP_K_KEYWORDS_LIST)
         fixed_matrix_sizes = [Constants.FIXED_INPUT_MATRIX_SIZE for i in range(len(top_k_keywords_sizes))]
         vector_dimensionality_sizes = [int(fixed_matrix_sizes[i]/top_k_keywords_sizes[i]) for i in range(len(top_k_keywords_sizes))]
 
-        mts_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[3],
-                          'top_k_keywords_sizes': top_k_keywords_sizes,
-                          'vector_dimensionality_sizes': vector_dimensionality_sizes}
-        return semantic_mts_representor.Semantic_MTS_Representor(datasets_dict, dataset_name, mts_param_dict)
+        sem_mts_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[3],
+                              'top_k_keywords_sizes': top_k_keywords_sizes,
+                              'vector_dimensionality_sizes': vector_dimensionality_sizes}
+        return semantic_mts_representor.Semantic_MTS_Representor(datasets_dict, dataset_name, sem_mts_param_dict)
     raise ValueError(representation_method_name + ' is not a supported REPRESENTATION_GENERATOR!')
 
 
