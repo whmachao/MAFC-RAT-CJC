@@ -102,7 +102,7 @@ class TfIdf:
         return representative_words, representative_tfidf_scores
 
 if __name__ == '__main__':
-    from AFD.semantic_mts_representation_generator import Semantic_MTS_Representation_Generator
+    from representors.semantic_mts_representor import Semantic_MTS_Representor
     top_k_keywords_sizes = list(range(10, 51, 10))
     fixed_matrix_sizes = [Constants.FIXED_INPUT_MATRIX_SIZE for i in range(len(top_k_keywords_sizes))]
     vector_dimensionality_sizes = [int(fixed_matrix_sizes[i] / top_k_keywords_sizes[i]) for i in range(len(top_k_keywords_sizes))]
@@ -110,6 +110,6 @@ if __name__ == '__main__':
     mts_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[3],
                       'top_k_keywords_sizes': top_k_keywords_sizes,
                       'vector_dimensionality_sizes': vector_dimensionality_sizes}
-    my_generator = Semantic_MTS_Representation_Generator({}, 'Test-2', mts_param_dict)
+    my_generator = Semantic_MTS_Representor({}, 'Test-2', mts_param_dict)
     all_representation_dict = my_generator.get_all_representations_dict()
     print()
