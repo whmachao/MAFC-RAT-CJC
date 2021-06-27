@@ -7,7 +7,7 @@ RECORD_KEYWORDS_AND_TFIDF = False
 
 
 # Configuration for Train/Test Split ***********************************************************************************
-TRAIN_TEST_SPLIT_RATIO = 0.5
+TRAIN_TEST_SPLIT_RATIO = 0.8
 SPLIT_BY_APP = True
 
 
@@ -50,8 +50,8 @@ TOP_K_DURATION = 30
 
 # Following parameters are used to construct the semantic vectors for keywords
 FIXED_INPUT_MATRIX_SIZE = 3000
-TOP_K_KEYWORDS_LIST = range(10, 21, 10)
-# TOP_K_KEYWORDS_LIST = range(10, 61, 10)
+# TOP_K_KEYWORDS_LIST = range(10, 21, 10)
+TOP_K_KEYWORDS_LIST = range(10, 61, 10)
 
 
 # Configuration for Classifiers ****************************************************************************************
@@ -65,14 +65,14 @@ ITERATIONS = 2
 
 
 # For APP_TRACE_2019  archive, BATCH_SIZE is set to 16
-BATCH_SIZE = 16
+BATCH_SIZE = 64
 
 VERBOSE = 2
 
 # if set 'ONLY_CSV_RESULTS' to True, for deep learning models, only save df_metrics.csv to minimize storage requirement
 ONLY_CSV_RESULTS = False
 
-EPOCHS = 20
+EPOCHS = 200
 
 # Configuration for Optimal Representation Filtering *******************************************************************
 
