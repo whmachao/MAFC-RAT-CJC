@@ -4,7 +4,7 @@
 import tensorflow.keras as keras
 import numpy as np
 import time
-
+import utilities.Constants as Constants
 from utilities.Utils import save_logs, delete_logs, get_optimal_batch_size
 
 
@@ -92,7 +92,17 @@ class Classifier_RESNET:
         model.compile(loss='categorical_crossentropy', optimizer=keras.optimizers.Adam(),
                       metrics=['accuracy'])
 
-        reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='loss', factor=0.5, patience=50, min_lr=0.0001)
+        lr_patience = 1
+        if Constants.EPOCHS * Constants.LR_PATIENCE_PERCENTAGE > 2:
+            lr_patience = int(Constants.EPOCHS * Constants.LR_PATIENCE_PERCENTAGE)
+        reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor=Constants.LR_MONITOR,
+                                                      factor=Constants.LR_FACTOR,
+                                                      patience=lr_patience,
+                                                      verbose=Constants.LR_VERBOSE,
+                                                      mode=Constants.LR_MODE,
+                                                      epsilon=Constants.LR_EPSILON,
+                                                      cooldown=Constants.LR_COOLDOWN,
+                                                      min_lr=Constants.LR_MIN)
 
         file_path = self.output_directory + 'best_model.hdf5'
 

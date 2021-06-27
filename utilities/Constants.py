@@ -74,6 +74,17 @@ ONLY_CSV_RESULTS = False
 
 EPOCHS = 200
 
+# Configure the learning rate
+LR_MONITOR = 'loss'
+LR_FACTOR = 0.5
+LR_PATIENCE_PERCENTAGE = 0.1
+LR_VERBOSE = 2
+LR_MODE = 'auto'
+LR_EPSILON = 0.0001
+LR_COOLDOWN = 0
+LR_MIN = 0.1
+
+
 # Configuration for Optimal Representation Filtering *******************************************************************
 
 
