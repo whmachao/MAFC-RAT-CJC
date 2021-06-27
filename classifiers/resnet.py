@@ -100,7 +100,7 @@ class Classifier_RESNET:
                                                       patience=lr_patience,
                                                       verbose=Constants.LR_VERBOSE,
                                                       mode=Constants.LR_MODE,
-                                                      epsilon=Constants.LR_EPSILON,
+                                                      min_delta=Constants.LR_MIN_DELTA,
                                                       cooldown=Constants.LR_COOLDOWN,
                                                       min_lr=Constants.LR_MIN)
 

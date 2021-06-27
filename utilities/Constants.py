@@ -29,7 +29,8 @@ MY_REPRESENTORS = ['PLAIN_HISTO', 'LEVEL_HISTO', 'MCT_MTS', 'MCT_SEMANTIC_MTS']
 ENABLE_ECDF = True
 WINDOW_SIZE = 2
 WINDOW_STRIDE = 1
-DATA_POINTS_LIST = range(10, 61, 10)
+DATA_POINTS_LIST = range(10, 11, 10)
+# DATA_POINTS_LIST = range(10, 61, 10)
 
 FIXED_LENGTH_LIST = [2**x for x in range(3, 5)]
 TREE_LEVEL_LIST = range(1, 3)
@@ -50,8 +51,8 @@ TOP_K_DURATION = 30
 
 # Following parameters are used to construct the semantic vectors for keywords
 FIXED_INPUT_MATRIX_SIZE = 3000
-# TOP_K_KEYWORDS_LIST = range(10, 21, 10)
-TOP_K_KEYWORDS_LIST = range(10, 61, 10)
+TOP_K_KEYWORDS_LIST = range(10, 11, 10)
+# TOP_K_KEYWORDS_LIST = range(10, 61, 10)
 
 
 # Configuration for Classifiers ****************************************************************************************
@@ -80,7 +81,7 @@ LR_FACTOR = 0.5
 LR_PATIENCE_PERCENTAGE = 0.1
 LR_VERBOSE = 2
 LR_MODE = 'auto'
-LR_EPSILON = 0.0001
+LR_MIN_DELTA = 0.0001
 LR_COOLDOWN = 0
 LR_MIN = 0.1
 
