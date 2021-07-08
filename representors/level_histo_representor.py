@@ -37,7 +37,8 @@ class Level_Histo_Representor():
             call_method_tree = app_trace_dict[key]
             # my_nodes = get_nodes_at_specific_level(call_method_tree, tree_level)
             print('Attribute Extraction of ' + str(key) + ' started ... ...')
-            my_etl_component = create_etl_component(self.param_dict['etl_component'], call_method_tree, tree_level, n_gram)
+            etl_param_dict = {'tree_level': tree_level, 'n_gram': n_gram}
+            my_etl_component = create_etl_component(self.param_dict['etl_component'], call_method_tree, etl_param_dict)
             sample_vector_list = my_etl_component.get_time_series_of_all_attributes()
             print('Attribute Extraction of ' + str(key) + ' has been completed!')
             print('$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
@@ -99,7 +100,7 @@ class Level_Histo_Representor():
         print('Start to parse: ' + self.dataset_name)
         start_time = time.time()
         functionality_names_dict, app_trace_dict = {}, {}
-        all_category_dir = get_project_dir() + '/archives' + '/' + Constants.ARCHIVE_NAMES[2]
+        all_category_dir = get_project_dir() + '/archives' + '/' + Constants.ARCHIVE_NAMES[0]
         category_dir = all_category_dir + '/' + self.dataset_name
         functionality_names_dict[self.dataset_name] = os.listdir(category_dir)
         for app_name in functionality_names_dict[self.dataset_name]:

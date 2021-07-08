@@ -19,7 +19,7 @@ class Plain_Histo_Representor():
 
         # Step 1: extract the method call tree from the original trace file
         functionality_names_dict, app_trace_dict = {}, {}
-        all_category_dir = get_project_dir() + '/archives' + '/' + Constants.ARCHIVE_NAMES[2]
+        all_category_dir = get_project_dir() + '/archives' + '/' + Constants.ARCHIVE_NAMES[0]
         category_dir = all_category_dir + '/' + self.dataset_name
         functionality_names_dict[self.dataset_name] = os.listdir(category_dir)
         for app_name in functionality_names_dict[self.dataset_name]:
@@ -43,7 +43,7 @@ class Plain_Histo_Representor():
             labels_list.append(sample_label)
             call_method_tree = app_trace_dict[key]
             my_nodes = get_nodes_at_specific_level(call_method_tree, 0)  # only take the root of the method call tree
-            my_etl_component = create_etl_component(self.param_dict['etl_component'], my_nodes)
+            my_etl_component = create_etl_component(self.param_dict['etl_component'], my_nodes, dict())
             sample_vector_list = my_etl_component.get_time_series_of_all_attributes()
             all_attributes_of_all_traces.append(sample_vector_list)
 

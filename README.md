@@ -12,9 +12,14 @@ Step 3: install the following libraries in 'rat'.
         Scikit-learn: conda install -c anaconda scikit-learn=0.19.1
         Treelib: conda install -c conda-forge treelib=1.5.5
         Gensim: conda install -c anaconda gensim=3.4.0
-        Tensorflow: conda install -c aaronzs tensorflow=1.10.0
+        Tensorflow: 
+            if you have a GPU equiped with CUDA:
+                conda install tensorflow=1.11.0=gpu_py36h5dc63e2_0
+            else:
+                conda install tensorflow=1.10.0=eigen_py36h849fbd8_0
         H5Py: conda install -c anaconda h5py=2.9.0
         Matplotlib: conda install -c conda-forge matplotlib=2.2.2
+        Wordcloud: conda install -c conda-forge wordcloud
 
 ### Export the Environment
 Step 1: activate the environment 'rat' by running 'conda activate rat';

@@ -15,41 +15,45 @@ import scipy.stats as stats
 
 def compute_overall_results(round_decimals = 3):
     # compute the statistics including the average accuracy, standard deviation in Table 3 of the manuscript
-    random = np.array([0.333, 0.333, 0.25, 0.1])
+    random = np.array([0.333, 0.25, 0.167, 0.077])
     print('Statistics of random')
     print(np.mean(random).round(round_decimals), np.std(random, ddof=1).round(round_decimals))
 
-    fcn_scr = np.array([0.611, 0.389, 0.273, 0.069])
+    fcn_scr = np.array([0.556, 0.542, 0.609, 0.322])
     print('Statistics of fcn_scr')
     print(np.mean(fcn_scr).round(round_decimals), np.std(fcn_scr, ddof=1).round(round_decimals))
 
-    lstm_scr = np.array([0.611, 0.333, 0.583, 0.19])
+    lstm_scr = np.array([0.833, 0.562, 0.55, 0.309])
     print('Statistics of lstm_scr')
     print(np.mean(lstm_scr).round(round_decimals), np.std(lstm_scr, ddof=1).round(round_decimals))
 
-    mlp_scr = np.array([0.444, 0.389, 0.364, 0.052])
+    mlp_scr = np.array([0.444, 0.5, 0.413, 0.311])
     print('Statistics of mlp_scr')
     print(np.mean(mlp_scr).round(round_decimals), np.std(mlp_scr, ddof=1).round(round_decimals))
 
-    resnet_scr = np.array([0.556, 0.389, 0.273, 0.069])
+    resnet_scr = np.array([0.611, 0.562, 0.543, 0.3])
     print('Statistics of resnet-scr')
     print(np.mean(resnet_scr).round(round_decimals), np.std(resnet_scr, ddof=1).round(round_decimals))
 
-    fcn_sr = np.array([0.667, 0.833, 0.667, 0.188])
+    fcn_sr = np.array([0.667, 0.854, 0.674, 0.467])
     print('Statistics of fcn_sr')
     print(np.mean(fcn_sr).round(round_decimals), np.std(fcn_sr, ddof=1).round(round_decimals))
 
-    lstm_sr = np.array([0.778, 1.0, 0.545, 0.3])
+    lstm_sr = np.array([0.778, 0.604, 0.646, 0.33])
     print('Statistics of lstm_sr')
     print(np.mean(lstm_sr).round(round_decimals), np.std(lstm_sr, ddof=1).round(round_decimals))
 
-    mlp_sr = np.array([0.722, 1.0, 0.556, 0.315])
+    mlp_sr = np.array([0.889, 0.625, 0.63, 0.478])
     print('Statistics of mlp_sr')
     print(np.mean(mlp_sr).round(round_decimals), np.std(mlp_sr, ddof=1).round(round_decimals))
 
-    resnet_sr = np.array([0.611, 0.778, 0.722, 0.266])
+    resnet_sr = np.array([0.778, 0.771, 0.609, 0.511])
     print('Statistics of resnet_sr')
     print(np.mean(resnet_sr).round(round_decimals), np.std(resnet_sr, ddof=1).round(round_decimals))
+
+    rat_optimals = np.array([0.889, 0.854, 0.674, 0.511])
+    print('Statistics of rat_optimals')
+    print(np.mean(rat_optimals).round(round_decimals), np.std(rat_optimals, ddof=1).round(round_decimals))
 
     return
 

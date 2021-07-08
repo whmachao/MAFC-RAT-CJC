@@ -40,6 +40,8 @@ GRAM_NUMBER_LIST = range(1, 3)
 # Configuration for Extractor_Transformer_Loader ***********************************************************************
 MY_ETL_COMPONENTS = ['PLAIN_HISTO', 'LEVEL_HISTO', 'MCT_MTS', 'MCT_SEMANTIC_MTS']
 
+BIN_NUMBER_LIST = range(3, 5, 1)   # PLAIN_HISTO
+
 NORMALIZE_TIME_SERIES = True
 
 # Following 3 parameters are used to filter out the methods according to their statistical characteristics

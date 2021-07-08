@@ -807,18 +807,21 @@ def create_representation_generator(representation_method_name, datasets_dict, d
     raise ValueError(representation_method_name + ' is not a supported REPRESENTATION_GENERATOR!')
 
 
-def create_etl_component(etl_component_name, method_call_tree, param_one, param_two):
+def create_etl_component(etl_component_name, method_call_tree, param_dict):
+    if etl_component_name == Constants.MY_ETL_COMPONENTS[0]:
+        from etl import plain_histo_ETL
+        return plain_histo_ETL.Plain_Histo_Extractor(method_call_tree, 1)
     if etl_component_name == Constants.MY_ETL_COMPONENTS[1]:
         from etl import level_histo_ETL
-        tree_level, n_gram = param_one, param_two
+        tree_level, n_gram = param_dict['tree_level'], param_dict['n_gram']
         return level_histo_ETL.Level_Histo_Extractor(method_call_tree, tree_level, n_gram)
     if etl_component_name == Constants.MY_ETL_COMPONENTS[2]:
         from etl import method_call_tree_mts_ETL
         return method_call_tree_mts_ETL.Method_Call_Tree_MTS_Extractor(method_call_tree, None, None)
     if etl_component_name == Constants.MY_ETL_COMPONENTS[3]:
         from etl import method_call_tree_sementics_mts_ETL
-        top_k_keywords = param_one
-        return method_call_tree_sementics_mts_ETL.Method_Call_Tree_Semantic_MTS_Extractor(method_call_tree, top_k_keywords, None)
+        k_keywords = param_dict['k_keywords']
+        return method_call_tree_sementics_mts_ETL.Method_Call_Tree_Semantic_MTS_Extractor(method_call_tree, k_keywords, None)
     raise ValueError(etl_component_name + ' is not a supported ETL_COMPONENT!')
 
 

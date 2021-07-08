@@ -77,7 +77,7 @@ class Semantic_MTS_Representor():
     # TS1: Method Duration, the execution time of each method call;
     # TS2: Variable Read, number of variable readings during the execution of each method call;
     # TS3: Variable Write, number of variable writings during the execution of each method call;
-    def _get_fixed_length_representation(self, app_trace_dict, top_k_keywords, vector_dimension):
+    def _get_fixed_length_representation(self, app_trace_dict, k_keywords, vector_dimension):
         # Extract the time series values of each attribute for the specific tree level from the method call tree
         true_labels_list, split_labels_list = [], []
         all_attributes_of_all_traces = []
@@ -89,7 +89,8 @@ class Semantic_MTS_Representor():
             call_method_tree = app_trace_dict[key]
             # my_nodes = get_nodes_at_specific_level(call_method_tree, tree_level)
             print('Attribute Extraction of ' + str(key) + ' started ... ...')
-            my_etl_component = create_etl_component(self.param_dict['etl_component'], call_method_tree, top_k_keywords, None)
+            etl_param_dict = {'k_keywords': k_keywords}
+            my_etl_component = create_etl_component(self.param_dict['etl_component'], call_method_tree, etl_param_dict)
             sample_vector_list = my_etl_component.get_time_series_of_all_attributes()
             print('Attribute Extraction of ' + str(key) + ' has been completed!')
             if Constants.DRAW_STATISTICAL_CHARACTERISTICS:
@@ -182,6 +183,6 @@ if __name__ == '__main__':
     mts_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[3],
                       'top_k_keywords_sizes': top_k_keywords_sizes,
                       'vector_dimensionality_sizes': vector_dimensionality_sizes}
-    my_generator = Semantic_MTS_Representor({}, 'Test-2', mts_param_dict)
+    my_generator = Semantic_MTS_Representor({}, 'Test', mts_param_dict)
     all_representation_dict = my_generator.get_all_representations_dict()
     print()

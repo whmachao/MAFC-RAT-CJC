@@ -7,7 +7,7 @@ from utilities.Utils import new_process_single_trace
 
 
 class Plain_Histo_Extractor:
-    def __init__(self, root_at_top_level):
+    def __init__(self, method_call_tree, root_at_top_level):
         if len(root_at_top_level) != 1:
             raise ValueError('nodes_at_specific_level MUST have only one element!')
 
