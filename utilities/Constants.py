@@ -60,9 +60,9 @@ TOP_K_KEYWORDS_LIST = range(10, 11, 10)
 # Configuration for Classifiers ****************************************************************************************
 MY_CLASSIFIERS = ['MLP', 'LSTM', 'FCN', 'ResNet', 'KNN']
 
-KNN_K = 1
-KNN_STRATEGY = 'classmost'
-KNN_DISTANCE = 'euclidean'
+KNN_K_VALUES = range(1, 10, 1)
+KNN_STRATEGY_LIST = ['class-most']
+KNN_DISTANCE_TYPES = ['euclidean']
 
 ITERATIONS = 2
 

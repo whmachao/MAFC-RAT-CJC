@@ -19,22 +19,29 @@ class Feature_Finder_Representor():
         top_k_keywords_sizes = self.param_dict['top_k_keywords_sizes']
         app_trace_dict = self._get_app_trace_dict()
         all_representation_dict = {}
-        total_representations = len(top_k_keywords_sizes)
+        total_representations = len(top_k_keywords_sizes)*len(Constants.KNN_K_VALUES)*len(Constants.KNN_STRATEGY_LIST)*len(Constants.KNN_DISTANCE_TYPES)
         progress = 0
         for i in range(len(top_k_keywords_sizes)):
-            progress += 1
-            top_k_keywords = top_k_keywords_sizes[i]
-            representation_key = str(top_k_keywords)
-            start_time = time.time()
-            print('##################################################################################')
-            print('Start to generate ' + representation_key + ': ' + str(progress) + ' out of ' + str(total_representations))
-            my_representation_dict = self._get_fixed_length_representation(app_trace_dict, top_k_keywords)
-            all_representation_dict[representation_key] = my_representation_dict[self.dataset_name]
-            complete_time = time.time()
-            consumed_time = complete_time - start_time
-            print('Complete to generate ' + representation_key + ': ' + str(progress) + ' out of ' + str(
-                total_representations) + ' (' + str(consumed_time) + ' seconds consumed)')
-            print('##################################################################################')
+            for j in range(len(Constants.KNN_K_VALUES)):
+                for k in range(len(Constants.KNN_STRATEGY_LIST)):
+                    for r in range(len(Constants.KNN_DISTANCE_TYPES)):
+                        progress += 1
+                        top_k_keywords = top_k_keywords_sizes[i]
+                        knn_k_value = Constants.KNN_K_VALUES[j]
+                        knn_strategy = Constants.KNN_STRATEGY_LIST[k]
+                        knn_distance = Constants.KNN_DISTANCE_TYPES[r]
+                        representation_key = str(top_k_keywords)+'_'+str(knn_k_value)+'_'+str(knn_strategy)+'_'+knn_distance
+                        start_time = time.time()
+                        print('##################################################################################')
+                        print('Start to generate ' + representation_key + ': ' + str(progress) + ' out of ' + str(
+                            total_representations))
+                        my_representation_dict = self._get_fixed_length_representation(app_trace_dict, top_k_keywords)
+                        all_representation_dict[representation_key] = my_representation_dict[self.dataset_name]
+                        complete_time = time.time()
+                        consumed_time = complete_time - start_time
+                        print('Complete to generate ' + representation_key + ': ' + str(progress) + ' out of ' + str(
+                            total_representations) + ' (' + str(consumed_time) + ' seconds consumed)')
+                        print('##################################################################################')
 
 
         return all_representation_dict

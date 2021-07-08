@@ -5,13 +5,15 @@ import utilities.Constants as Constants
 from classifiers.evaluation_metrics.overall_accuracy import Evaluation_Accuracy
 
 class Classifier_KNN:
-    def __init__(self, output_directory, input_shape, nb_classes, verbose=2):
+    def __init__(self, output_directory, k_value=1, pred_strategy='class-most', distance_metric='euclidean'):
         self.output_directory = output_directory
-        self.model = self.build_model(input_shape, nb_classes)
+        self.model = self.build_model()
+        self.k_value = int(k_value)
+        self.pred_strategy = pred_strategy
+        self.distance_metric = distance_metric
         self.y_test_pred = list()
-        self.verbose = verbose
 
-    def build_model(self, input_shape, nb_classes):
+    def build_model(self):
         model = None
         return model
 
@@ -21,17 +23,16 @@ class Classifier_KNN:
         self.y_train = self._get_true_labels(y_train)
         self.x_test = x_test.reshape((x_test.shape[0], x_test.shape[1]))
         self.y_test = self._get_true_labels(y_test)
-        self.k_value = Constants.KNN_K
-        self.pred_strategy = Constants.KNN_STRATEGY
-        self.distance_metric = Constants.KNN_DISTANCE
         self._get_predicted_labels_for_all()
         print(self.y_test_pred)
         accuracy = Evaluation_Accuracy(self.y_test_pred, self.y_test).get_evaluation_metric()
-        duration = time.time() - start_time
+        testing_time = time.time() - start_time
 
         res = pd.DataFrame(columns=['best_model_val_acc', 'time_consumption_in_seconds'])
-        res.loc[0] = [accuracy, duration]
+        res.loc[0] = [accuracy, testing_time]
         res.to_csv(path_or_buf=self.output_directory + 'df_metrics.csv', index=False)
+
+        return 0.0, testing_time
 
 
 
@@ -78,12 +79,12 @@ class Classifier_KNN:
                 raise ValueError(self.distance_metric + ' is not implemented yet!')
             distance_list.append(distance)
 
-        if self.pred_strategy == 'classshortest':
+        if self.pred_strategy == 'class-shortest':
             min_Distance = min(distance_list)
             min_distance_index = distance_list.index(min_Distance)
             corresponding_label = self.y_train[min_distance_index]
             predicted_label = int(corresponding_label)
-        elif self.pred_strategy == 'classmost':
+        elif self.pred_strategy == 'class-most':
             for i in range(self.k_value):
                 current_distance = min(distance_list)
                 similar_x_train_index = distance_list.index(current_distance)

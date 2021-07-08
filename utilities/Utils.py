@@ -759,26 +759,41 @@ def get_train_test_indices(my_split_ratio, my_labels_list):
     return my_train_indices, my_test_indices
 
 
-def create_classifier(classifier_name, input_shape, nb_classes, output_directory):
+def create_classifier(classifier_name, output_directory, param_dict):
     if classifier_name == 'FCN':
         from classifiers import fcn
-        return fcn.Classifier_FCN(output_directory, input_shape, nb_classes, Constants.VERBOSE)
+        return fcn.Classifier_FCN(output_directory, param_dict['input_shape'], param_dict['nb_classes'], Constants.VERBOSE)
     if classifier_name == 'MLP':
         from classifiers import mlp
-        return mlp.Classifier_MLP(output_directory, input_shape, nb_classes, Constants.VERBOSE)
+        return mlp.Classifier_MLP(output_directory, param_dict['input_shape'], param_dict['nb_classes'], Constants.VERBOSE)
     if classifier_name == 'ResNet':
         from classifiers import resnet
-        return resnet.Classifier_RESNET(output_directory, input_shape, nb_classes, Constants.VERBOSE)
+        return resnet.Classifier_RESNET(output_directory, param_dict['input_shape'], param_dict['nb_classes'], Constants.VERBOSE)
     if classifier_name == 'LSTM':
         from classifiers import lstm
-        return lstm.Classifier_LSTM(output_directory, input_shape, nb_classes, Constants.VERBOSE)
+        return lstm.Classifier_LSTM(output_directory, param_dict['input_shape'], param_dict['nb_classes'], Constants.VERBOSE)
     if classifier_name == 'KNN':
         from classifiers import knn
-        knn_param_dict = {'k_value': Constants.KNN_K,
-                          'pred_strategy': Constants.KNN_STRATEGY,
-                          'distance_metric': Constants.KNN_DISTANCE}
-        return knn.Classifier_KNN(output_directory, knn_param_dict)
+        return knn.Classifier_KNN(output_directory, param_dict['k_value'], param_dict['pred_strategy'], param_dict['distance_metric'])
     raise ValueError(classifier_name + ' is not the supported CLASSIFIER!')
+
+# def create_classifier(classifier_name, input_shape, nb_classes, output_directory):
+#     if classifier_name == 'FCN':
+#         from classifiers import fcn
+#         return fcn.Classifier_FCN(output_directory, input_shape, nb_classes, Constants.VERBOSE)
+#     if classifier_name == 'MLP':
+#         from classifiers import mlp
+#         return mlp.Classifier_MLP(output_directory, input_shape, nb_classes, Constants.VERBOSE)
+#     if classifier_name == 'ResNet':
+#         from classifiers import resnet
+#         return resnet.Classifier_RESNET(output_directory, input_shape, nb_classes, Constants.VERBOSE)
+#     if classifier_name == 'LSTM':
+#         from classifiers import lstm
+#         return lstm.Classifier_LSTM(output_directory, input_shape, nb_classes, Constants.VERBOSE)
+#     if classifier_name == 'KNN':
+#         from classifiers import knn
+#         return knn.Classifier_KNN(output_directory, None, None, Constants.VERBOSE)
+#     raise ValueError(classifier_name + ' is not the supported CLASSIFIER!')
 
 
 def create_representation_generator(representation_method_name, datasets_dict, dataset_name):
