@@ -1,7 +1,6 @@
 import time
 import numpy as np
 import pandas as pd
-import utilities.Constants as Constants
 from classifiers.evaluation_metrics.overall_accuracy import Evaluation_Accuracy
 
 class Classifier_KNN:
