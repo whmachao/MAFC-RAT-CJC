@@ -10,7 +10,7 @@ import time
 import numpy as np
 
 
-def fit_classifier(dataset_dict, classifier_name, output_directory):
+def fit_classifier(dataset_dict, classifier_name, output_directory, representation_key):
     x_train = dataset_dict[0]
     y_train = dataset_dict[1]
     x_test = dataset_dict[2]
@@ -36,7 +36,16 @@ def fit_classifier(dataset_dict, classifier_name, output_directory):
 
     input_shape = x_train.shape[1:]
 
-    classifier = create_classifier(classifier_name, input_shape, nb_classes, output_directory)
+    # classifier = create_classifier(classifier_name, input_shape, nb_classes, output_directory)
+    param_dict = dict()
+    classifier_params = representation_key.split('_')
+    if classifier_name == 'KNN':
+        param_dict = {'k_value': classifier_params[-3],
+                      'pred_strategy': classifier_params[-2],
+                      'distance_metric': classifier_params[-1]}
+    else:
+        param_dict = {'input_shape': input_shape, 'nb_classes': nb_classes}
+    classifier = create_classifier(classifier_name, output_directory, param_dict)
     training_time, testing_time = classifier.fit(x_train, y_train, x_test, y_test, y_true,
                                                  Constants.BATCH_SIZE, Constants.EPOCHS, Constants.ONLY_CSV_RESULTS)
 
@@ -58,7 +67,7 @@ def conduct_experiment(archive_name, dataset_name, classifier_name, itr, dataset
         print('Already done')
     else:
 
-        training_time, testing_time = fit_classifier(datasets_dict, classifier_name, output_directory)
+        training_time, testing_time = fit_classifier(datasets_dict, classifier_name, output_directory, representation_name)
 
         print('DONE')
 
@@ -160,8 +169,8 @@ if __name__ == '__main__':
 
     # command_string = 'etl_into_ucr_format'
 
-    target_representors = Constants.MY_REPRESENTORS[2:4]
-    target_classifiers = Constants.MY_CLASSIFIERS[0:]
+    target_representors = Constants.MY_REPRESENTORS[3:5]
+    target_classifiers = Constants.MY_CLASSIFIERS[0:5]
     target_datasets = Constants.APP_CATEGORY_NAMES[-1:]
 
     if command_string == 'run_tsc_experiments':
