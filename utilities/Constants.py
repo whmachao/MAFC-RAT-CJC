@@ -24,7 +24,7 @@ GPU_MEMO_ON_DEMAND = True
 
 
 # Configuration for Representation Learning ****************************************************************************
-MY_REPRESENTORS = ['PLAIN_HISTO', 'LEVEL_HISTO', 'MCT_MTS', 'MCT_SEMANTIC_MTS']
+MY_REPRESENTORS = ['PLAIN_HISTO', 'LEVEL_HISTO', 'MCT_MTS', 'MCT_SEMANTIC_MTS', 'FEATURE_FINDER']
 
 ENABLE_ECDF = True
 WINDOW_SIZE = 2
@@ -58,7 +58,7 @@ TOP_K_KEYWORDS_LIST = range(10, 11, 10)
 
 
 # Configuration for Classifiers ****************************************************************************************
-MY_CLASSIFIERS = ['MLP', 'LSTM', 'FCN', 'ResNet']
+MY_CLASSIFIERS = ['MLP', 'LSTM', 'FCN', 'ResNet', 'KNN']
 
 KNN_K = 1
 KNN_STRATEGY = 'classmost'

@@ -5,6 +5,8 @@ import utilities.Constants as Constants
 from utilities.Utils import construct_method_call_tree, create_etl_component, get_project_dir
 from utilities.Utils import simple_distribution_transform, pad_method_call_tree, split_train_test
 import sys
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.feature_extraction.text import CountVectorizer
 
 
 class Feature_Finder_Representor():
@@ -15,19 +17,18 @@ class Feature_Finder_Representor():
 
     def get_all_representations_dict(self):
         top_k_keywords_sizes = self.param_dict['top_k_keywords_sizes']
-        vector_dimensionality_sizes = self.param_dict['vector_dimensionality_sizes']
         app_trace_dict = self._get_app_trace_dict()
         all_representation_dict = {}
-        total_representations = len(top_k_keywords_sizes) * len(vector_dimensionality_sizes)
+        total_representations = len(top_k_keywords_sizes)
         progress = 0
         for i in range(len(top_k_keywords_sizes)):
             progress += 1
-            top_k_keywords, vector_dimension = top_k_keywords_sizes[i], vector_dimensionality_sizes[i]
-            representation_key = str(top_k_keywords) + '_' + str(vector_dimension)
+            top_k_keywords = top_k_keywords_sizes[i]
+            representation_key = str(top_k_keywords)
             start_time = time.time()
             print('##################################################################################')
             print('Start to generate ' + representation_key + ': ' + str(progress) + ' out of ' + str(total_representations))
-            my_representation_dict = self._get_fixed_length_representation(app_trace_dict, top_k_keywords, vector_dimension)
+            my_representation_dict = self._get_fixed_length_representation(app_trace_dict, top_k_keywords)
             all_representation_dict[representation_key] = my_representation_dict[self.dataset_name]
             complete_time = time.time()
             consumed_time = complete_time - start_time
@@ -76,7 +77,7 @@ class Feature_Finder_Representor():
     # TS1: Method Duration, the execution time of each method call;
     # TS2: Variable Read, number of variable readings during the execution of each method call;
     # TS3: Variable Write, number of variable writings during the execution of each method call;
-    def _get_fixed_length_representation(self, app_trace_dict, k_keywords, vector_dimension):
+    def _get_fixed_length_representation(self, app_trace_dict, k_keywords):
         # Extract the time series values of each attribute for the specific tree level from the method call tree
         true_labels_list, split_labels_list = [], []
         all_attributes_of_all_traces = []
@@ -104,20 +105,22 @@ class Feature_Finder_Representor():
         # Step 2: obtain the proper representation for each keyword extracted from the execution traces
         # Solution 1: use word2vec to transform the keywords into vector format while preserving semantic similarity
         num_of_attributes = len(all_attributes_of_all_traces[0])
-        histogram_arrays_in_lists_by_attribute = []
+        tfidf_arrays_in_lists_by_attribute = []
         for attribute_index in range(num_of_attributes):
             trace_keywords_list_in_lists = []
             for trace_attributes_list in all_attributes_of_all_traces:
                 trace_keywords_list_in_lists.append(trace_attributes_list[attribute_index])
-            histogram_arrays_in_lists_by_attribute.append(trace_keywords_list_in_lists)
-        print('Total number of histogram based attributes: ' + str(len(histogram_arrays_in_lists_by_attribute)))
-        print('Total number of histogram based samples(traces): ' + str(len(histogram_arrays_in_lists_by_attribute[0])))
+            corpus = self._get_corpus_from_keywords(trace_keywords_list_in_lists)
+            keywords_tfidf_arrays = self._compute_tfidf_for_keywords(corpus)
+            tfidf_arrays_in_lists_by_attribute.append(keywords_tfidf_arrays)
+        print('Total number of histogram based attributes: ' + str(len(tfidf_arrays_in_lists_by_attribute)))
+        print('Total number of histogram based samples(traces): ' + str(len(tfidf_arrays_in_lists_by_attribute[0])))
 
         # Step 3: split all samples into the train/test sets
         train_samples_list, train_labels_list, test_samples_list, test_labels_list = split_train_test(true_labels_list,
                                                                                                       split_labels_list,
                                                                                                       num_of_attributes,
-                                                                                                      histogram_arrays_in_lists_by_attribute)
+                                                                                                      tfidf_arrays_in_lists_by_attribute)
         if train_labels_list is None:
             raise ValueError('Train Test Split failed!')
 
@@ -145,9 +148,32 @@ class Feature_Finder_Representor():
 
         return my_raw_representation_dict
 
+    # Organize the corpus from keywords.
+    def _get_corpus_from_keywords(self, keywords_as_multipl_lists):
+        corpus = list()
+        for keywords_list in keywords_as_multipl_lists:
+            document = ''
+            for keyword in keywords_list:
+                if document == '':
+                    document = document + keyword
+                    continue
+                document = document + ' ' + keyword
+            corpus.append(document)
+
+        return corpus
+
+    # Compute the tf and tf-idf scores of each keyword occurred in the corpus.
+    def _compute_tfidf_for_keywords(self, corpus):
+        vectorizer = CountVectorizer()
+        transformer = TfidfTransformer()
+        tfidf = transformer.fit_transform(vectorizer.fit_transform(corpus))
+        keywords = vectorizer.get_feature_names()
+        doc_tfidf_vectors = tfidf.toarray()
+
+        return doc_tfidf_vectors
 
 if __name__ == '__main__':
-    top_k_keywords_sizes = list(range(10, 11, 10))  # No. of keywords extracted from each execution trace.
+    top_k_keywords_sizes = list(range(10, 21, 10))  # No. of keywords extracted from each execution trace.
     vector_dimensionality_sizes = [2]  # Each keyword's representation contains 2 values: tf and tf-idf.
 
     mts_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[3],

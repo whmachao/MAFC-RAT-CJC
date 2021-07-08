@@ -804,6 +804,12 @@ def create_representation_generator(representation_method_name, datasets_dict, d
                               'top_k_keywords_sizes': top_k_keywords_sizes,
                               'vector_dimensionality_sizes': vector_dimensionality_sizes}
         return semantic_mts_representor.Semantic_MTS_Representor(datasets_dict, dataset_name, sem_mts_param_dict)
+    if representation_method_name == Constants.MY_REPRESENTORS[4]:
+        from representors import feature_finder_representor
+        top_k_keywords_sizes = list(Constants.TOP_K_KEYWORDS_LIST)
+        feature_finder_param_dict = {'etl_component': Constants.MY_ETL_COMPONENTS[3],
+                                     'top_k_keywords_sizes': top_k_keywords_sizes}
+        return feature_finder_representor.Feature_Finder_Representor(datasets_dict, dataset_name, feature_finder_param_dict)
     raise ValueError(representation_method_name + ' is not a supported REPRESENTATION_GENERATOR!')
 
 
