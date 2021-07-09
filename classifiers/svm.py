@@ -3,18 +3,20 @@ import numpy as np
 import pandas as pd
 from sklearn import svm
 
+
 class Classifier_SVM:
-    def __init__(self, output_directory, C=0.8, kernal='rbf', gamma=20, decision_function_shape='ovr'):
+    def __init__(self, output_directory, C=0.8, kernel='rbf', gamma='auto', decision_function_shape='ovr'):
         self.output_directory = output_directory
-        self.C = C
-        self.kernal = kernal
+        self.C = float(C)
+        self.kernel = kernel
         self.gamma = gamma
         self.decision_function_shape = decision_function_shape
         self.model = self.build_model()
         self.y_test_pred = list()
 
     def build_model(self):
-        model = svm.SVC(C=self.C, kernel=self.kernal, gamma=self.gamma, decision_function_shape=self.decision_function_shape)
+        model = svm.SVC(C=self.C, kernel=self.kernel, gamma=self.gamma, verbose=True,
+                        decision_function_shape=self.decision_function_shape)
         return model
 
     def fit(self, x_train, y_train, x_test, y_test, y_true, batch=1, epochs=1, only_save_csv=1):

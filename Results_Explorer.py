@@ -39,7 +39,7 @@ def compute_overall_results(round_decimals = 3):
     print('Statistics of fcn_sr')
     print(np.mean(fcn_sr).round(round_decimals), np.std(fcn_sr, ddof=1).round(round_decimals))
 
-    lstm_sr = np.array([0.778, 0.604, 0.646, 0.33])
+    lstm_sr = np.array([0.778, 0.604, 0.646, 0.372])
     print('Statistics of lstm_sr')
     print(np.mean(lstm_sr).round(round_decimals), np.std(lstm_sr, ddof=1).round(round_decimals))
 

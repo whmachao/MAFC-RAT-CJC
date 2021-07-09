@@ -43,6 +43,11 @@ def fit_classifier(dataset_dict, classifier_name, output_directory, representati
         param_dict = {'k_value': classifier_params[-3],
                       'pred_strategy': classifier_params[-2],
                       'distance_metric': classifier_params[-1]}
+    elif classifier_name == 'SVM':
+        param_dict = {'C': classifier_params[-4],
+                      'kernel': Constants.SVM_KERNEL,
+                      'gamma': Constants.SVM_GAMMA,
+                      'decision_function_shape': Constants.SVM_DECISION_FUNCTION_SHAPE}
     else:
         param_dict = {'input_shape': input_shape, 'nb_classes': nb_classes}
     classifier = create_classifier(classifier_name, output_directory, param_dict)
@@ -169,8 +174,8 @@ if __name__ == '__main__':
 
     # command_string = 'etl_into_ucr_format'
 
-    target_representors = Constants.MY_REPRESENTORS[3:5]
-    target_classifiers = Constants.MY_CLASSIFIERS[0:5]
+    target_representors = Constants.MY_REPRESENTORS[4:5]
+    target_classifiers = Constants.MY_CLASSIFIERS[5:6]
     target_datasets = Constants.APP_CATEGORY_NAMES[-1:]
 
     if command_string == 'run_tsc_experiments':

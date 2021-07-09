@@ -1,4 +1,4 @@
-import os
+import numpy as np
 
 
 DRAW_STATISTICAL_CHARACTERISTICS = False
@@ -53,31 +53,23 @@ TOP_K_DURATION = 30
 
 # Following parameters are used to construct the semantic vectors for keywords
 FIXED_INPUT_MATRIX_SIZE = 3000
-# TOP_K_KEYWORDS_LIST = range(10, 11, 10)
-TOP_K_KEYWORDS_LIST = range(10, 61, 10)
+TOP_K_KEYWORDS_LIST = range(10, 21, 10)
+# TOP_K_KEYWORDS_LIST = range(10, 61, 10)
 
 
 # Configuration for Classifiers ****************************************************************************************
 MY_CLASSIFIERS = ['MLP', 'LSTM', 'FCN', 'ResNet', 'KNN', 'SVM']
 
-KNN_K_VALUES = range(1, 10, 1)
-KNN_STRATEGY_LIST = ['class-most']
-KNN_DISTANCE_TYPES = ['euclidean']
-
+# Configuration for all classifiers
 ITERATIONS = 2
 
-
+# Neural Network hyper-parameter configuration
 # For APP_TRACE_2019  archive, BATCH_SIZE is set to 16
 BATCH_SIZE = 64
-
 VERBOSE = 2
-
-# if set 'ONLY_CSV_RESULTS' to True, for deep learning models, only save df_metrics.csv to minimize storage requirement
-ONLY_CSV_RESULTS = False
-
 EPOCHS = 200
 
-# Configure the learning rate
+# Learning rate configuration
 LR_MONITOR = 'loss'
 LR_FACTOR = 0.5
 LR_PATIENCE_PERCENTAGE = 0.1
@@ -87,6 +79,20 @@ LR_MIN_DELTA = 0.0001
 LR_COOLDOWN = 0
 LR_MIN = 0.1
 
+# KNN parameter configuration
+KNN_K_VALUES = range(1, 2, 1)
+KNN_STRATEGY_LIST = ['class-most']
+KNN_DISTANCE_TYPES = ['euclidean']
+
+# SVM parameter configuration
+SVM_C_VALUES = np.arange(0.1, 0.21, 0.1)
+# SVM_C_VALUES = np.arange(0.1, 1.01, 0.1)
+SVM_KERNEL = 'rbf'
+SVM_GAMMA = 'auto'
+SVM_DECISION_FUNCTION_SHAPE = 'ovr'
+
+# if set 'ONLY_CSV_RESULTS' to True, for deep learning models, only save df_metrics.csv to minimize storage requirement
+ONLY_CSV_RESULTS = False
 
 # Configuration for Optimal Representation Filtering *******************************************************************
 
@@ -104,4 +110,4 @@ LEGEND_SHOW_NAME_DICT = {'MCT_MTS': 'SCR', 'MCT_SEMANTIC_MTS': 'SR'}
 
 
 if __name__ == '__main__':
-    print()
+    print(SVM_C_VALUES)

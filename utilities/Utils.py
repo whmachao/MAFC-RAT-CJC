@@ -777,7 +777,7 @@ def create_classifier(classifier_name, output_directory, param_dict):
         return knn.Classifier_KNN(output_directory, param_dict['k_value'], param_dict['pred_strategy'], param_dict['distance_metric'])
     if classifier_name == 'SVM':
         from classifiers import svm
-        return svm.Classifier_SVM(output_directory)
+        return svm.Classifier_SVM(output_directory, param_dict['C'], param_dict['kernel'], param_dict['gamma'], param_dict['decision_function_shape'])
     raise ValueError(classifier_name + ' is not the supported CLASSIFIER!')
 
 # def create_classifier(classifier_name, input_shape, nb_classes, output_directory):
